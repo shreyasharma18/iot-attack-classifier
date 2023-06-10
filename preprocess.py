@@ -35,6 +35,10 @@ class DataLoader:
     
     def extract_features(self, df: pd.DataFrame) -> pd.DataFrame:
         fe = FeatureExtractor(df)
+        fe.is_data_msg()
+        fe.is_dio_msg()
+        fe.is_dis_msg()
+        fe.is_dao_msg()
         
 
     def preprocess_data(self) -> pd.DataFrame:
