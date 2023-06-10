@@ -20,11 +20,6 @@ class DataFields:
     num_dio: int
     num_dis: int
     num_dao: int
-    # Max/Min of version numbers,
-    # the difference between 
-    # version numbers
-    max_count_versions: int
-    min_count_versions: int
     # Max/Min/Average 
     # time difference between
     # DIO/DIS/DAO messages

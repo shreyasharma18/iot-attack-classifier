@@ -5,7 +5,8 @@ import json
 import argparse
 import logging
 import pandas as pd
-from typing import List, Tuple, Optional
+from typing import List
+from feature_extractor import FeatureExtractor
 
 class DataLoader:
 
@@ -32,11 +33,15 @@ class DataLoader:
         csv_files = self._filter_csv_files(readable_files)
         return [join(self.path, f) for f in csv_files]
     
+    def extract_features(self, df: pd.DataFrame) -> pd.DataFrame:
+        fe = FeatureExtractor(df)
+        
+
     def preprocess_data(self) -> pd.DataFrame:
         csv_files = self._fetch_data_src()
         for csv_file in csv_files:
             df = pd.read_csv(csv_file)
-            
+            fe = FeatureExtractor(df)
         pass
 
 
