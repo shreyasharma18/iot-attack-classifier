@@ -25,11 +25,6 @@ class DataFields:
     # version numbers
     max_count_versions: int
     min_count_versions: int
-    # Max/Min of rank values,
-    # the difference between
-    # rank values
-    max_rank_values: int
-    min_rank_values: int
     # Max/Min/Average 
     # time difference between
     # DIO/DIS/DAO messages
