@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from dataclasses import asdict
 
 @dataclass
 class DataFields:
@@ -35,7 +34,7 @@ class DataFields:
     avg_dao_delta: float
     # Number of dropped packets due to collision
     # /neighbor allocation/queueing/packeting
-    num_collision_drops: int
-    num_neigh_alloc_drops: int
-    num_queue_drops: int
-    num_packetn_drops: int
+    num_collision_drops: int = 0
+    num_neigh_alloc_drops: int = 0
+    num_queue_drops: int = 0
+    num_packetn_drops: int = 0

@@ -1,8 +1,8 @@
 import pandas as pd
-from typing import Tuple
+from typing import Tuple, Dict
 "Base interface for feature extractor"
 
-class FeatureExtractor:
+class FeatureExtractorPCAP:
 
     def __init__(self, data: pd.DataFrame) -> None:
         self.data = data
@@ -91,3 +91,30 @@ class FeatureExtractor:
         return (dao_data.dao_delta.max(),
                 dao_data.dao_delta.min(),
                 dao_data.dao_delta.mean())
+    
+
+class FeatureExtractorLog:
+
+    def __init__(self, path: str) -> None:
+        self.path = path
+        self.drop_counter = {
+            "collision_drops": 0,
+            "neigh_alloc_drops": 0,
+            "queue_drops": 0,
+            "packetn_drops": 0
+        }
+        self.packet_drop_map = {
+            "collisions": "collision_drops",
+            "neighbor": "neigh_alloc_drops",
+            "queuebuf": "queue_drops",
+            "allocate packet": "packetn_drops"
+        }
+
+    def load_log_file(self) -> Dict:
+        with open(self.path, "r") as f:
+            lines = f.readlines()
+            for line in lines:
+                for key in self.packet_drop_map.keys():
+                    if key in line:
+                        self.drop_counter[key] += 1
+        return self.drop_counter
