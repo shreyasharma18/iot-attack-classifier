@@ -84,7 +84,8 @@ class DataLoader:
             rec = self.extract_features(df)
             df = df.append(rec, 
                            ignore_index=True)
-        return df
+        df.to_csv("training_set.csv", index=False)
+        print(f"Data processing done!")
 
 
 
