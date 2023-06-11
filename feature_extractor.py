@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Tuple
 "Base interface for feature extractor"
 
 class FeatureExtractor:
@@ -49,13 +50,13 @@ class FeatureExtractor:
         self.is_data_msg()
         return self.data.is_data_msg.sum()
 
-    def get_max_delta(self) -> int:
+    def get_max_delta(self) -> float:
         return self.data.time_diff.max()
 
-    def get_min_delta(self) -> int:
+    def get_min_delta(self) -> float:
         return self.data.time_diff.min()
 
-    def get_avg_delta(self) -> int:
+    def get_avg_delta(self) -> float:
         return self.data.time_diff.mean()
 
     def get_num_dio(self) -> int:
@@ -70,3 +71,23 @@ class FeatureExtractor:
         self.is_dao_msg()
         return self.data.is_dao_msg.sum()
 
+    def get_dio_delta(self) -> Tuple[float, float, float]:
+        dio_data = self.data[self.data.is_dio_msg==1]
+        dio_data["dio_delta"] = dio_data.Time.diff()
+        return (dio_data.dio_delta.max(),
+                dio_data.dio_delta.min(),
+                dio_data.dio_delta.mean())
+
+    def get_dis_delta(self) -> Tuple[float, float, float]:
+        dis_data = self.data[self.data.is_dis_msg==1]
+        dis_data["dis_delta"] = dis_data.Time.diff()
+        return (dis_data.dis_delta.max(),
+                dis_data.dis_delta.min(),
+                dis_data.dis_delta.mean())
+
+    def get_dao_delta(self) -> Tuple[float, float, float]:
+        dao_data = self.data[self.data.is_dao_msg==1]
+        dao_data["dao_delta"] = dao_data.Time.diff()
+        return (dao_data.dao_delta.max(),
+                dao_data.dao_delta.min(),
+                dao_data.dao_delta.mean())

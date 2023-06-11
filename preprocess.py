@@ -7,6 +7,7 @@ import logging
 import pandas as pd
 from typing import List
 from feature_extractor import FeatureExtractor
+from data import DataFields
 
 class DataLoader:
 
@@ -39,6 +40,30 @@ class DataLoader:
         fe.is_dio_msg()
         fe.is_dis_msg()
         fe.is_dao_msg()
+        dio_deltas = fe.get_dio_delta()
+        dao_deltas = fe.get_dao_delta()
+        dis_deltas = fe.get_dis_delta()
+        data = DataFields(
+            fe.get_max_length(),
+            fe.get_min_length(),
+            fe.get_avg_length(),
+            fe.get_num_msgs(),
+            fe.get_max_delta(),
+            fe.get_min_delta(),
+            fe.get_avg_delta(),
+            fe.get_num_dao(),
+            fe.get_num_dis(),
+            fe.get_num_dao(),
+            dio_deltas[0],
+            dio_deltas[1],
+            dio_deltas[2],
+            dis_deltas[0],
+            dis_deltas[1],
+            dis_deltas[2],
+            dao_deltas[0],
+            dao_deltas[1],
+            dao_deltas[2]
+        )
         
 
     def preprocess_data(self) -> pd.DataFrame:
