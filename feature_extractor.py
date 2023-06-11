@@ -116,5 +116,5 @@ class FeatureExtractorLog:
             for line in lines:
                 for key in self.packet_drop_map.keys():
                     if key in line:
-                        self.drop_counter[key] += 1
+                        self.drop_counter[self.packet_drop_map[key]] += 1
         return self.drop_counter

@@ -32,6 +32,8 @@ class DataFields:
     max_dao_delta: float
     min_dao_delta: float
     avg_dao_delta: float
+    # Attack type
+    attack_type: str
     # Number of dropped packets due to collision
     # /neighbor allocation/queueing/packeting
     num_collision_drops: int = 0

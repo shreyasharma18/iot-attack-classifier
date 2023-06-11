@@ -10,20 +10,21 @@ from feature_extractor import (FeatureExtractorPCAP,
                                FeatureExtractorLog)
 from data import DataFields
 from dataclasses import asdict
+from tqdm import tqdm
 
 class DataLoader:
 
     def __init__(self, csv_path) -> None:
         # path to csv files
         self.csv_path = csv_path
-        self.log_dir = "/home/sheron/Desktop/iot-attack-classifier/Dataset/Small Network/Log Files/"
+        self.log_dir = "/home/sheron/Desktop/iot-attack-classifier/Dataset/Large Network/Log Files/"
 
     def _filter_readable_files(self, files) -> List[str]:
         readable_files = [f for f in files \
                 if isfile(join(self.csv_path, f))]
         return readable_files
 
-    def _filter_csv_files(files) -> List[str]:
+    def _filter_csv_files(self, files) -> List[str]:
         csv_files = [f for f in files if f.endswith('.csv')]
         return csv_files
 
@@ -35,6 +36,16 @@ class DataLoader:
         csv_files = self._filter_csv_files(readable_files)
         return [join(self.csv_path, f) for f in csv_files]
     
+    def get_attack_type(self, filename:str) -> str:
+        if "hello" in filename.lower():
+            return "HelloFloodAttack"
+        elif "version" in filename.lower():
+            return "VersionNumberAttack"
+        elif "worst" in filename.lower():
+            return "WorstParentAttack"
+        elif "noattack" in filename.lower():
+            return "NoAttack"
+
     def extract_features(self, df: pd.DataFrame) -> pd.DataFrame:
         fe = FeatureExtractorPCAP(df)
         fe.is_data_msg()
@@ -68,22 +79,25 @@ class DataLoader:
             dao_deltas[0],
             dao_deltas[1],
             dao_deltas[2],
+            self.get_attack_type(split(self.log_path)[1]),
             drop_counter["collision_drops"],
             drop_counter["neigh_alloc_drops"],
             drop_counter["queue_drops"],
-            drop_counter["packetn_drops"]
+            drop_counter["packetn_drops"],
         )
         return asdict(data)        
 
     def preprocess_data(self) -> pd.DataFrame:
         csv_files = self._fetch_data_src()
-        df = pd.DataFrame()
-        for csv_file in csv_files:
+        list_dicts = []
+        for csv_file in tqdm(csv_files):
+            # print(csv_file)
             self.log_path = join(self.log_dir, split(csv_file)[1][:-4] + ".testlog")
             df = pd.read_csv(csv_file)
             rec = self.extract_features(df)
-            df = df.append(rec, 
-                           ignore_index=True)
+            # print(rec)
+            list_dicts.append(rec)
+        df = pd.DataFrame(list_dicts)
         df.to_csv("training_set.csv", index=False)
         print(f"Data processing done!")
 
